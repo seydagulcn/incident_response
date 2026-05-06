@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+    <h2>{{ incident['title'] }}</h2>
+    <div style="display: flex; gap: 8px;">
+        <a href="{{ url_for('edit_incident', incident_id=incident['id']) }}" class="btn btn-secondary">Edit</a>
+        <form method="POST" action="{{ url_for('delete_incident', incident_id=incident['id']) }}" onsubmit="return confirm('Delete this incident?')">
+            <button class="btn btn-danger">Delete</button>
+        </form>
+    </div>
+</div>
+
+<div class="metrics">
+    <div class="metric-box">
+        <div class="metric-value">{{ mttr }}</div>
+        <div class="metric-label">MTTR (Mean Time to Respond)</div>
+    </div>
+    <div class="metric-box">
+        <div class="metric-value">{{ mttd }}</div>
+        <div class="metric-label">MTTD (Mean Time to Detect)</div>
+    </div>
+</div>
+
+<div class="card">
+    <table>
+        <tr><th>Type</th><td>{{ incident['incident_type'] }}</td></tr>
+        <tr><th>Severity</th><td><span class="badge badge-{{ incident['severity'] }}">{{ incident['severity'] | capitalize }}</span></td></tr>
+        <tr><th>Status</th><td><span class="badge badge-{{ incident['status'] }}">{{ incident['status'] | capitalize }}</span></td></tr>
+        <tr><th>Started At</th><td>{{ incident['started_at'] }}</td></tr>
+        <tr><th>Detected At</th><td>{{ incident['detected_at'] }}</td></tr>
+        <tr><th>Resolved At</th><td>{{ incident['resolved_at'] if incident['resolved_at'] else 'Not resolved yet' }}</td></tr>
+        <tr><th>Action Taken</th><td>{{ incident['action_taken'] if incident['action_taken'] else '-' }}</td></tr>
+    </table>
+</div>
+
+<a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+{% endblock %}

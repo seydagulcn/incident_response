@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Add New Incident</h2>
+<div class="card">
+    <form method="POST">
+        <label>Title</label>
+        <input type="text" name="title" required placeholder="Short description of the incident">
+
+        <label>Incident Type</label>
+        <select name="incident_type" required>
+            <option value="">-- Select type --</option>
+            <option>Data Breach</option>
+            <option>Privilege Escalation</option>
+            <option>Phishing</option>
+            <option>Ransomware</option>
+            <option>DDoS</option>
+            <option>Insider Threat</option>
+            <option>Malware</option>
+            <option>Other</option>
+        </select>
+
+        <label>Severity</label>
+        <select name="severity" required>
+            <option value="">-- Select severity --</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+            <option value="critical">Critical</option>
+        </select>
+
+        <label>Incident Started At</label>
+        <input type="datetime-local" name="started_at" required>
+
+        <label>Detected At</label>
+        <input type="datetime-local" name="detected_at" required>
+
+        <label>Action Taken</label>
+        <textarea name="action_taken" rows="3" placeholder="What was done after detection?"></textarea>
+
+        <div style="margin-top: 18px; display: flex; gap: 10px;">
+            <button class="btn btn-primary" type="submit">Add Incident</button>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

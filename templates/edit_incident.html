@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Edit Incident</h2>
+<div class="card">
+    <form method="POST">
+        <label>Title</label>
+        <input type="text" name="title" value="{{ incident['title'] }}" required>
+
+        <label>Incident Type</label>
+        <select name="incident_type" required>
+            {% for t in ['Data Breach', 'Privilege Escalation', 'Phishing', 'Ransomware', 'DDoS', 'Insider Threat', 'Malware', 'Other'] %}
+            <option value="{{ t }}" {% if incident['incident_type'] == t %}selected{% endif %}>{{ t }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Severity</label>
+        <select name="severity" required>
+            {% for s in ['low', 'medium', 'high', 'critical'] %}
+            <option value="{{ s }}" {% if incident['severity'] == s %}selected{% endif %}>{{ s | capitalize }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Status</label>
+        <select name="status" required>
+            <option value="open" {% if incident['status'] == 'open' %}selected{% endif %}>Open</option>
+            <option value="closed" {% if incident['status'] == 'closed' %}selected{% endif %}>Closed</option>
+        </select>
+
+        <label>Incident Started At</label>
+        <input type="datetime-local" name="started_at" value="{{ incident['started_at'] }}" required>
+
+        <label>Detected At</label>
+        <input type="datetime-local" name="detected_at" value="{{ incident['detected_at'] }}" required>
+
+        <label>Resolved At (optional)</label>
+        <input type="datetime-local" name="resolved_at" value="{{ incident['resolved_at'] or '' }}">
+
+        <label>Action Taken</label>
+        <textarea name="action_taken" rows="3">{{ incident['action_taken'] or '' }}</textarea>
+
+        <div style="margin-top: 18px; display: flex; gap: 10px;">
+            <button class="btn btn-primary" type="submit">Save</button>
+            <a href="{{ url_for('incident_detail', incident_id=incident['id']) }}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
