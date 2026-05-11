@@ -6,26 +6,44 @@
 </div>
 
 <div class="card">
-    <form method="GET" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end;">
-        <div>
-            <label>Status</label>
-            <select name="status" style="width: 140px;">
-                <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All</option>
-                <option value="open" {% if status_filter == 'open' %}selected{% endif %}>Open</option>
-                <option value="closed" {% if status_filter == 'closed' %}selected{% endif %}>Closed</option>
-            </select>
+    <form method="GET" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;">
+        <div style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">
+            <div>
+                <label>Status</label>
+                <select name="status" style="width: 140px;">
+                    <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All</option>
+                    <option value="open" {% if status_filter == 'open' %}selected{% endif %}>Open</option>
+                    <option value="closed" {% if status_filter == 'closed' %}selected{% endif %}>Closed</option>
+                </select>
+            </div>
+            <div>
+                <label>Severity</label>
+                <select name="severity" style="width: 140px;">
+                    <option value="all" {% if severity_filter == 'all' %}selected{% endif %}>All</option>
+                    <option value="critical" {% if severity_filter == 'critical' %}selected{% endif %}>Critical</option>
+                    <option value="high" {% if severity_filter == 'high' %}selected{% endif %}>High</option>
+                    <option value="medium" {% if severity_filter == 'medium' %}selected{% endif %}>Medium</option>
+                    <option value="low" {% if severity_filter == 'low' %}selected{% endif %}>Low</option>
+                </select>
+            </div>
+            <button class="btn btn-secondary" type="submit">Filter</button>
         </div>
-        <div>
-            <label>Severity</label>
-            <select name="severity" style="width: 140px;">
-                <option value="all" {% if severity_filter == 'all' %}selected{% endif %}>All</option>
-                <option value="critical" {% if severity_filter == 'critical' %}selected{% endif %}>Critical</option>
-                <option value="high" {% if severity_filter == 'high' %}selected{% endif %}>High</option>
-                <option value="medium" {% if severity_filter == 'medium' %}selected{% endif %}>Medium</option>
-                <option value="low" {% if severity_filter == 'low' %}selected{% endif %}>Low</option>
-            </select>
+        <div style="display: flex; gap: 16px; align-items: center;">
+            <div style="text-align: center;">
+                <div style="font-size: 18px; font-weight: bold; color: #2c3e50;">{{ stats.total }}</div>
+                <div style="font-size: 11px; color: #aaa;">Toplam</div>
+            </div>
+            <div style="width: 1px; height: 28px; background: #eee;"></div>
+            <div style="text-align: center;">
+                <div style="font-size: 18px; font-weight: bold; color: #2980b9;">{{ stats.open }}</div>
+                <div style="font-size: 11px; color: #aaa;">Açık</div>
+            </div>
+            <div style="width: 1px; height: 28px; background: #eee;"></div>
+            <div style="text-align: center;">
+                <div style="font-size: 18px; font-weight: bold; color: #1e8449;">{{ stats.closed }}</div>
+                <div style="font-size: 11px; color: #aaa;">Kapalı</div>
+            </div>
         </div>
-        <button class="btn btn-secondary" type="submit">Filter</button>
     </form>
 </div>
 

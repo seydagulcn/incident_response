@@ -83,9 +83,15 @@ def dashboard():
         params.append(severity_filter)
     query += " ORDER BY detected_at DESC"
     incidents = conn.execute(query, params).fetchall()
+    stats = {
+        "total": conn.execute("SELECT COUNT(*) FROM incidents WHERE user_id = ?", (session["user_id"],)).fetchone()[0],
+        "open": conn.execute("SELECT COUNT(*) FROM incidents WHERE user_id = ? AND status = 'open'", (session["user_id"],)).fetchone()[0],
+        "closed": conn.execute("SELECT COUNT(*) FROM incidents WHERE user_id = ? AND status = 'closed'", (session["user_id"],)).fetchone()[0],
+    }
     conn.close()
     return render_template("dashboard.html", incidents=incidents,
-                           status_filter=status_filter, severity_filter=severity_filter)
+                           status_filter=status_filter, severity_filter=severity_filter,
+                           stats=stats)
 
 @app.route("/incident/add", methods=["GET", "POST"])
 @login_required
