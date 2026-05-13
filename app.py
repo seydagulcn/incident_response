@@ -83,11 +83,10 @@ def dashboard():
         params.append(severity_filter)
     query += " ORDER BY detected_at DESC"
     incidents = conn.execute(query, params).fetchall()
-    stats = {
-        "total": conn.execute("SELECT COUNT(*) FROM incidents WHERE user_id = ?", (session["user_id"],)).fetchone()[0],
-        "open": conn.execute("SELECT COUNT(*) FROM incidents WHERE user_id = ? AND status = 'open'", (session["user_id"],)).fetchone()[0],
-        "closed": conn.execute("SELECT COUNT(*) FROM incidents WHERE user_id = ? AND status = 'closed'", (session["user_id"],)).fetchone()[0],
-    }
+    total = conn.execute("SELECT COUNT(*) FROM incidents WHERE user_id = ?", (session["user_id"],)).fetchone()[0]
+    open_count = conn.execute("SELECT COUNT(*) FROM incidents WHERE user_id = ? AND status = 'open'", (session["user_id"],)).fetchone()[0]
+    closed_count = conn.execute("SELECT COUNT(*) FROM incidents WHERE user_id = ? AND status = 'closed'", (session["user_id"],)).fetchone()[0]
+    stats = {"total": total, "open": open_count, "closed": closed_count}
     conn.close()
     return render_template("dashboard.html", incidents=incidents,
                            status_filter=status_filter, severity_filter=severity_filter,
