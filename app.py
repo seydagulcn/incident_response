@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from functools import wraps
 import hashlib
 from db import get_connection, init_db
-from logic import calculate_mttr, calculate_mttd, format_hours, is_valid_incident
+from logic import calculate_mttr, calculate_mttd, calculate_mtbf, format_hours, is_valid_incident
 
 app = Flask(__name__)
 app.secret_key = "mysecretkey123"
@@ -125,14 +125,20 @@ def incident_detail(incident_id):
         "SELECT * FROM incidents WHERE id = ? AND user_id = ?",
         (incident_id, session["user_id"])
     ).fetchone()
-    conn.close()
     if not incident:
+        conn.close()
         flash("Incident not found.")
         return redirect(url_for("dashboard"))
     mttr = calculate_mttr(incident["detected_at"], incident["resolved_at"])
     mttd = calculate_mttd(incident["started_at"], incident["detected_at"])
+    all_incidents = conn.execute(
+        "SELECT started_at FROM incidents WHERE user_id = ? AND status = 'closed' ORDER BY started_at ASC",
+        (session["user_id"],)
+    ).fetchall()
+    conn.close()
+    mtbf = calculate_mtbf([i["started_at"] for i in all_incidents])
     return render_template("detail.html", incident=incident,
-                           mttr=format_hours(mttr), mttd=format_hours(mttd))
+                           mttr=format_hours(mttr), mttd=format_hours(mttd), mtbf=format_hours(mtbf))
 
 @app.route("/incident/<int:incident_id>/edit", methods=["GET", "POST"])
 @login_required

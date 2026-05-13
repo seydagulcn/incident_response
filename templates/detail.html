@@ -10,14 +10,18 @@
     </div>
 </div>
 
-<div class="metrics">
+<div class="metrics" style="grid-template-columns: 1fr 1fr 1fr;">
+    <div class="metric-box">
+        <div class="metric-value">{{ mttd }}</div>
+        <div class="metric-label">MTTD (Mean Time to Detect)</div>
+    </div>
     <div class="metric-box">
         <div class="metric-value">{{ mttr }}</div>
         <div class="metric-label">MTTR (Mean Time to Respond)</div>
     </div>
     <div class="metric-box">
-        <div class="metric-value">{{ mttd }}</div>
-        <div class="metric-label">MTTD (Mean Time to Detect)</div>
+        <div class="metric-value">{{ mtbf }}</div>
+        <div class="metric-label">MTBF (Mean Time Between Failures)</div>
     </div>
 </div>
 

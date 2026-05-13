@@ -5,6 +5,13 @@ DATE_FORMAT = "%Y-%m-%dT%H:%M"
 def parse_dt(dt_str):
     return datetime.strptime(dt_str, DATE_FORMAT)
 
+def calculate_mtbf(started_at_list):
+    if len(started_at_list) < 2:
+        return None
+    times = sorted([parse_dt(s) for s in started_at_list])
+    gaps = [(times[i+1] - times[i]).total_seconds() / 3600 for i in range(len(times)-1)]
+    return round(sum(gaps) / len(gaps), 2)
+
 def calculate_mttr(detected_at, resolved_at):
     if not detected_at or not resolved_at:
         return None
