@@ -4,7 +4,7 @@
 <div class="card">
     <form method="POST">
         <label>Title</label>
-        <input type="text" name="title" required placeholder="Short description of the incident">
+        <input type="text" name="title" required placeholder="Give a short title for the incident">
 
         <label>Incident Type</label>
         <select name="incident_type" required>
@@ -35,7 +35,7 @@
         <input type="datetime-local" name="detected_at" required>
 
         <label>Action Taken</label>
-        <textarea name="action_taken" rows="3" placeholder="What was done after detection?"></textarea>
+        <textarea name="action_taken" rows="3" placeholder="Describe what was done after the incident was detected"></textarea>
 
         <div style="margin-top: 18px; display: flex; gap: 10px;">
             <button class="btn btn-primary" type="submit">Add Incident</button>

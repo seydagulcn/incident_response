@@ -36,7 +36,7 @@ def get_severity_label(severity):
 
 def is_valid_incident(title, incident_type, started_at, detected_at):
     if not title or not incident_type or not started_at or not detected_at:
-        return False, "All fields are required."
+        return False, "Please fill in all required fields."
     try:
         s = parse_dt(started_at)
         d = parse_dt(detected_at)
