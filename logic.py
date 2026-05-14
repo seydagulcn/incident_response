@@ -44,6 +44,16 @@ def get_severity_label(severity):
 def is_valid_incident(title, incident_type, started_at, detected_at):
     if not title or not incident_type or not started_at or not detected_at:
         return False, "Please fill in all required fields."
+    if len(title.strip()) < 3:
+        return False, "Title must be at least 3 characters."
+    if len(title) > 100:
+        return False, "Title cannot exceed 100 characters."
+    allowed = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,'-_()")
+    if not all(c in allowed for c in title):
+        return False, "Title contains invalid characters."
+    valid_types = ["Data Breach", "Privilege Escalation", "Phishing", "Ransomware", "DDoS", "Insider Threat", "Malware", "Other"]
+    if incident_type not in valid_types:
+        return False, "Invalid incident type."
     try:
         s = parse_dt(started_at)
         d = parse_dt(detected_at)

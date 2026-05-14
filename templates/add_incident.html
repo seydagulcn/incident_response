@@ -4,19 +4,19 @@
 <div class="card">
     <form method="POST">
         <label>Title</label>
-        <input type="text" name="title" required placeholder="Give a short title for the incident">
+        <input type="text" name="title" required placeholder="Give a short title for the incident" maxlength="100">
 
         <label>Incident Type</label>
         <select name="incident_type" required>
             <option value="">-- Select type --</option>
-            <option>Data Breach</option>
-            <option>Privilege Escalation</option>
-            <option>Phishing</option>
-            <option>Ransomware</option>
-            <option>DDoS</option>
-            <option>Insider Threat</option>
-            <option>Malware</option>
-            <option>Other</option>
+            <option value="Data Breach">Data Breach</option>
+            <option value="Privilege Escalation">Privilege Escalation</option>
+            <option value="Phishing">Phishing</option>
+            <option value="Ransomware">Ransomware</option>
+            <option value="DDoS">DDoS</option>
+            <option value="Insider Threat">Insider Threat</option>
+            <option value="Malware">Malware</option>
+            <option value="Other">Other</option>
         </select>
 
         <label>Severity</label>
@@ -35,7 +35,7 @@
         <input type="datetime-local" name="detected_at" required>
 
         <label>Action Taken</label>
-        <textarea name="action_taken" rows="3" placeholder="Describe what was done after the incident was detected"></textarea>
+        <textarea name="action_taken" rows="3" maxlength="500" placeholder="Describe what was done after the incident was detected"></textarea>
 
         <div style="margin-top: 18px; display: flex; gap: 10px;">
             <button class="btn btn-primary" type="submit">Add Incident</button>
