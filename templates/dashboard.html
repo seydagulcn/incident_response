@@ -56,6 +56,7 @@
                 <th>Type</th>
                 <th>Severity</th>
                 <th>Status</th>
+                <th>Started At</th>
                 <th>Detected At</th>
                 <th>Actions</th>
             </tr>
@@ -67,6 +68,7 @@
                 <td>{{ inc['incident_type'] }}</td>
                 <td><span class="badge badge-{{ inc['severity'] }}">{{ inc['severity'] | capitalize }}</span></td>
                 <td><span class="badge badge-{{ inc['status'] }}">{{ inc['status'] | capitalize }}</span></td>
+                <td>{{ inc['started_at'] }}</td>
                 <td>{{ inc['detected_at'] }}</td>
                 <td>
                     <a href="{{ url_for('edit_incident', incident_id=inc['id']) }}" class="btn btn-secondary" style="font-size: 12px; padding: 4px 8px;">Edit</a>
