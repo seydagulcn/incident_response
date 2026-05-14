@@ -4,7 +4,7 @@
 <div class="card">
     <form method="POST">
         <label>Title</label>
-        <input type="text" name="title" value="{{ incident['title'] }}" required>
+        <input type="text" name="title" value="{{ incident['title'] }}" required maxlength="100">
 
         <label>Incident Type</label>
         <select name="incident_type" required>
@@ -32,11 +32,11 @@
         <label>Detected At</label>
         <input type="datetime-local" name="detected_at" value="{{ incident['detected_at'] }}" required>
 
-        <label>Resolved At (optional)</label>
+        <label>Resolved At (fill in when closing the incident)</label>
         <input type="datetime-local" name="resolved_at" value="{{ incident['resolved_at'] or '' }}">
 
         <label>Action Taken</label>
-        <textarea name="action_taken" rows="3">{{ incident['action_taken'] or '' }}</textarea>
+        <textarea name="action_taken" rows="3" maxlength="500" placeholder="Describe what actions were taken to resolve the incident">{{ incident['action_taken'] or '' }}</textarea>
 
         <div style="margin-top: 18px; display: flex; gap: 10px;">
             <button class="btn btn-primary" type="submit">Save</button>
