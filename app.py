@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from functools import wraps
 import hashlib
+from datetime import datetime
 from db import get_connection, init_db
 from logic import calculate_mttr, calculate_mttd, calculate_mtbf, format_hours, is_valid_incident
 
@@ -17,6 +18,16 @@ def login_required(f):
             return redirect(url_for("login"))
         return f(*args, **kwargs)
     return wrapper
+
+def log_activity(incident_id, user_id, action):
+    conn = get_connection()
+    timestamp = datetime.now().strftime("%Y-%m-%dT%H:%M")
+    conn.execute(
+        "INSERT INTO activity_log (incident_id, user_id, action, timestamp) VALUES (?, ?, ?, ?)",
+        (incident_id, user_id, action, timestamp)
+    )
+    conn.commit()
+    conn.close()
 
 @app.route("/")
 def index():
@@ -107,12 +118,14 @@ def add_incident():
             flash(msg)
             return render_template("add_incident.html")
         conn = get_connection()
-        conn.execute(
+        cursor = conn.execute(
             "INSERT INTO incidents (user_id, title, incident_type, severity, started_at, detected_at, action_taken, status) VALUES (?, ?, ?, ?, ?, ?, ?, 'open')",
             (session["user_id"], title, incident_type, severity, started_at, detected_at, action_taken)
         )
+        incident_id = cursor.lastrowid
         conn.commit()
         conn.close()
+        log_activity(incident_id, session["user_id"], "Incident created")
         flash("Incident added successfully.")
         return redirect(url_for("dashboard"))
     return render_template("add_incident.html")
@@ -135,10 +148,15 @@ def incident_detail(incident_id):
         "SELECT started_at FROM incidents WHERE user_id = ? AND status = 'closed' ORDER BY started_at ASC",
         (session["user_id"],)
     ).fetchall()
+    logs = conn.execute(
+        "SELECT * FROM activity_log WHERE incident_id = ? ORDER BY timestamp ASC",
+        (incident_id,)
+    ).fetchall()
     conn.close()
     mtbf = calculate_mtbf([i["started_at"] for i in all_incidents])
     return render_template("detail.html", incident=incident,
-                           mttr=format_hours(mttr), mttd=format_hours(mttd), mtbf=format_hours(mtbf))
+                           mttr=format_hours(mttr), mttd=format_hours(mttd), mtbf=format_hours(mtbf),
+                           logs=logs)
 
 @app.route("/incident/<int:incident_id>/edit", methods=["GET", "POST"])
 @login_required
@@ -165,12 +183,31 @@ def edit_incident(incident_id):
         if not valid:
             flash(msg)
             return render_template("edit_incident.html", incident=incident)
+
+        changes = []
+        if incident["title"] != title:
+            changes.append(f"Title changed to '{title}'")
+        if incident["status"] != status:
+            changes.append(f"Status changed: {incident['status']} → {status}")
+        if incident["severity"] != severity:
+            changes.append(f"Severity changed: {incident['severity']} → {severity}")
+        if incident["resolved_at"] != resolved_at and resolved_at:
+            changes.append("Resolved At set")
+        if incident["action_taken"] != action_taken:
+            changes.append("Action Taken updated")
+
         conn.execute(
             "UPDATE incidents SET title=?, incident_type=?, severity=?, started_at=?, detected_at=?, resolved_at=?, action_taken=?, status=? WHERE id=? AND user_id=?",
             (title, incident_type, severity, started_at, detected_at, resolved_at, action_taken, status, incident_id, session["user_id"])
         )
         conn.commit()
         conn.close()
+
+        for change in changes:
+            log_activity(incident_id, session["user_id"], change)
+        if not changes:
+            log_activity(incident_id, session["user_id"], "Incident updated (no field changes)")
+
         flash("Incident updated.")
         return redirect(url_for("incident_detail", incident_id=incident_id))
     conn.close()

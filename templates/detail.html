@@ -37,5 +37,21 @@
     </table>
 </div>
 
+<div class="card">
+    <h3 style="margin-bottom: 14px; color: #2c3e50;">Activity Log</h3>
+    {% if logs %}
+    <ul style="list-style: none; padding: 0; margin: 0;">
+        {% for log in logs %}
+        <li style="display: flex; gap: 14px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid #f0f0f0;">
+            <span style="color: #aaa; font-size: 12px; white-space: nowrap; min-width: 120px;">{{ log['timestamp'] }}</span>
+            <span style="font-size: 14px; color: #333;">{{ log['action'] }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p style="color: #aaa; font-size: 14px;">No activity yet.</p>
+    {% endif %}
+</div>
+
 <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
 {% endblock %}

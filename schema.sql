@@ -17,3 +17,13 @@ CREATE TABLE IF NOT EXISTS incidents (
     status TEXT NOT NULL DEFAULT 'open',
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
+CREATE TABLE IF NOT EXISTS activity_log (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    incident_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    action TEXT NOT NULL,
+    timestamp TEXT NOT NULL,
+    FOREIGN KEY (incident_id) REFERENCES incidents(id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
