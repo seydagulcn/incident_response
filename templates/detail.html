@@ -30,9 +30,9 @@
         <tr><th>Type</th><td>{{ incident['incident_type'] }}</td></tr>
         <tr><th>Severity</th><td><span class="badge badge-{{ incident['severity'] }}">{{ incident['severity'] | capitalize }}</span></td></tr>
         <tr><th>Status</th><td><span class="badge badge-{{ incident['status'] }}">{{ incident['status'] | capitalize }}</span></td></tr>
-        <tr><th>Started At</th><td>{{ incident['started_at'] }}</td></tr>
-        <tr><th>Detected At</th><td>{{ incident['detected_at'] }}</td></tr>
-        <tr><th>Resolved At</th><td>{{ incident['resolved_at'] if incident['resolved_at'] else 'Not resolved yet' }}</td></tr>
+        <tr><th>Started At</th><td>{{ incident['started_at'] | format_date }}</td></tr>
+        <tr><th>Detected At</th><td>{{ incident['detected_at'] | format_date }}</td></tr>
+        <tr><th>Resolved At</th><td>{{ incident['resolved_at'] | format_date if incident['resolved_at'] else 'Not resolved yet' }}</td></tr>
         <tr><th>Action Taken</th><td>{{ incident['action_taken'] if incident['action_taken'] else '-' }}</td></tr>
     </table>
 </div>

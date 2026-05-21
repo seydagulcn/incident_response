@@ -11,6 +11,16 @@ app.secret_key = "mysecretkey123"
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
+@app.template_filter('format_date')
+def format_date(dt_str):
+    if not dt_str:
+        return '-'
+    try:
+        dt = datetime.strptime(dt_str, "%Y-%m-%dT%H:%M")
+        return dt.strftime("%d %b %Y %H:%M")
+    except:
+        return dt_str
+
 def login_required(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
