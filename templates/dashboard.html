@@ -9,6 +9,10 @@
     <form method="GET" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;">
         <div style="display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap;">
             <div>
+                <label>Search</label>
+                <input type="text" name="search" value="{{ search_query }}" placeholder="Search by title..." style="width: 180px;">
+            </div>
+            <div>
                 <label>Status</label>
                 <select name="status" style="width: 140px;">
                     <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All</option>
@@ -81,7 +85,7 @@
         </tbody>
     </table>
     {% else %}
-    <p style="color: #888; text-align: center; padding: 20px;">No incidents yet. <a href="{{ url_for('add_incident') }}">Add one</a>.</p>
+    <p style="color: #888; text-align: center; padding: 20px;">No incidents found. <a href="{{ url_for('add_incident') }}">Add one</a>.</p>
     {% endif %}
 </div>
 {% endblock %}

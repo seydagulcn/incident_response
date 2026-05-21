@@ -93,6 +93,7 @@ def logout():
 def dashboard():
     status_filter = request.args.get("status", "all")
     severity_filter = request.args.get("severity", "all")
+    search_query = request.args.get("search", "").strip()
     conn = get_connection()
     query = "SELECT * FROM incidents WHERE user_id = ?"
     params = [session["user_id"]]
@@ -102,6 +103,9 @@ def dashboard():
     if severity_filter != "all":
         query += " AND severity = ?"
         params.append(severity_filter)
+    if search_query:
+        query += " AND title LIKE ?"
+        params.append(f"%{search_query}%")
     query += " ORDER BY detected_at DESC"
     incidents = conn.execute(query, params).fetchall()
     total = conn.execute("SELECT COUNT(*) FROM incidents WHERE user_id = ?", (session["user_id"],)).fetchone()[0]
@@ -111,7 +115,7 @@ def dashboard():
     conn.close()
     return render_template("dashboard.html", incidents=incidents,
                            status_filter=status_filter, severity_filter=severity_filter,
-                           stats=stats)
+                           search_query=search_query, stats=stats)
 
 @app.route("/incident/add", methods=["GET", "POST"])
 @login_required
